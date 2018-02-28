@@ -106,6 +106,8 @@ dooropen.wav
 doorclose.wav
 .*closes the door.*
 doorclose.wav
+.*door resists.*
+doorResists.wav
 .*tortured hyena.*
 hyena.wav
 .*slain.*again.*
