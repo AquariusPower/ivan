@@ -93,7 +93,7 @@ wall
 
   Config BRICK_PROPAGANDA;
   {
-    DigMessage = "You break the wall down despite the unconfortable feeling of being constantly watched.";
+    DigMessage = "You break the wall down despite the uncomfortable feeling of being constantly watched.";
     MainMaterialConfig == GRANITE;
     NameSingular = "wall";
     PostFix = "and a poster with a picture of high priest Petrus, the ruler of the Attnamese Empire";
@@ -125,7 +125,7 @@ wall
 
   Config BRICK_PRIMITIVE_PROPAGANDA;
   {
-    DigMessage = "You break the wall down despite the unconfortable feeling of being constantly watched.";
+    DigMessage = "You break the wall down despite the uncomfortable feeling of being constantly watched.";
     MainMaterialConfig == BALSA_WOOD;
     Adjective = "primitive";
     NameSingular = "wall";
@@ -823,7 +823,7 @@ olterraincontainer /* olterrain->decoration-> */
     MainMaterialConfig == FIR_WOOD;
     NameSingular = "bookcase";
     BitmapPos = 16, 272;
-    SitMessage = "The bookcase is very unconfortable to sit on.";
+    SitMessage = "The bookcase is very uncomfortable to sit on.";
     StorageVolume = 100000;
     HPModifier = 20;
     AttachedGod = SOPHOS;
@@ -838,7 +838,7 @@ olterraincontainer /* olterrain->decoration-> */
     MaterialColorB = rgb16(124, 50, 16);
     NameSingular = "chest of drawers";
     BitmapPos = 0, 224;
-    SitMessage = "The chest of drawers is very unconfortable to sit on.";
+    SitMessage = "The chest of drawers is very uncomfortable to sit on.";
     StorageVolume = 50000;
     HPModifier = 40;
     AttachedGod = SOPHOS;
@@ -851,7 +851,7 @@ olterraincontainer /* olterrain->decoration-> */
     MainMaterialConfig == FIR_WOOD;
     NameSingular = "shelf";
     BitmapPos = 16, 128;
-    SitMessage = "The shelf is very unconfortable to sit on.";
+    SitMessage = "The shelf is very uncomfortable to sit on.";
     StorageVolume = 80000;
     HPModifier = 20;
     AttachedGod = ATAVUS;
