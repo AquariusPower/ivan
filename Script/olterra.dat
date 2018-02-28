@@ -93,7 +93,7 @@ wall
 
   Config BRICK_PROPAGANDA;
   {
-    DigMessage = "You break the wall down despite the uncomfortable feeling of being constantly watched.";
+    DigMessage = "You break the wall down despite the unconfortable feeling of being constantly watched.";
     MainMaterialConfig == GRANITE;
     NameSingular = "wall";
     PostFix = "and a poster with a picture of high priest Petrus, the ruler of the Attnamese Empire";
@@ -125,7 +125,7 @@ wall
 
   Config BRICK_PRIMITIVE_PROPAGANDA;
   {
-    DigMessage = "You break the wall down despite the uncomfortable feeling of being constantly watched.";
+    DigMessage = "You break the wall down despite the unconfortable feeling of being constantly watched.";
     MainMaterialConfig == BALSA_WOOD;
     Adjective = "primitive";
     NameSingular = "wall";
@@ -733,6 +733,7 @@ stairs /* olterrain-> */
 
   Config STAIRS_UP;
   {
+    SpatialFlags = MF_CEIL | MF_STAIR;
     PostFix = "upwards";
     BitmapPos = 0, 192;
     IsUpLink = true;
@@ -742,12 +743,14 @@ stairs /* olterrain-> */
   {
     PostFix = "downwards";
     BitmapPos = 0, 208;
+    SpatialFlags = MF_FLOOR | MF_STAIR;
   }
 
   Config SUMO_ARENA_ENTRY;
   {
     PostFix = "downwards";
     BitmapPos = 0, 208;
+    SpatialFlags = MF_FLOOR | MF_STAIR;
   }
 
   Config SUMO_ARENA_EXIT;
@@ -755,6 +758,7 @@ stairs /* olterrain-> */
     PostFix = "upwards";
     BitmapPos = 0, 192;
     IsUpLink = true;
+    SpatialFlags = MF_CEIL | MF_STAIR;
   }
 }
 
@@ -793,6 +797,7 @@ altar /* olterrain-> */
   BitmapPos = 0, 368;
   /* PostFix depends on Config */
   CreateDivineConfigurations = true;
+  SpatialFlags = MF_LOWWALL | MF_TABLE;
   IsAbstract = true;
 }
 
@@ -818,11 +823,12 @@ olterraincontainer /* olterrain->decoration-> */
     MainMaterialConfig == FIR_WOOD;
     NameSingular = "bookcase";
     BitmapPos = 16, 272;
-    SitMessage = "The bookcase is very uncomfortable to sit on.";
+    SitMessage = "The bookcase is very unconfortable to sit on.";
     StorageVolume = 100000;
     HPModifier = 20;
     AttachedGod = SOPHOS;
     LeftOverItems == NaturalMaterialForm { MainMaterial = 0 { Volume = 250:750; } Times = 1:2; }
+    SpatialFlags = MF_WALL;
   }
 
   Config CHEST_OF_DRAWERS;
@@ -832,7 +838,7 @@ olterraincontainer /* olterrain->decoration-> */
     MaterialColorB = rgb16(124, 50, 16);
     NameSingular = "chest of drawers";
     BitmapPos = 0, 224;
-    SitMessage = "The chest of drawers is very uncomfortable to sit on.";
+    SitMessage = "The chest of drawers is very unconfortable to sit on.";
     StorageVolume = 50000;
     HPModifier = 40;
     AttachedGod = SOPHOS;
@@ -845,7 +851,7 @@ olterraincontainer /* olterrain->decoration-> */
     MainMaterialConfig == FIR_WOOD;
     NameSingular = "shelf";
     BitmapPos = 16, 128;
-    SitMessage = "The shelf is very uncomfortable to sit on.";
+    SitMessage = "The shelf is very unconfortable to sit on.";
     StorageVolume = 80000;
     HPModifier = 20;
     AttachedGod = ATAVUS;
@@ -897,6 +903,7 @@ boulder /* olterrain-> */
   IsAbstract = true;
   HPModifier = 50;
   LeftOverItems == NaturalMaterialForm { MainMaterial = 0 { Volume = 500:1500; } Times = 1:3; }
+  SpatialFlags = MF_ONFLOOR;
 
   Config 1;
   {
@@ -958,6 +965,7 @@ earth
   ShowThingsUnder = false;
   LeftOverItems == NaturalMaterialForm { MainMaterial = 0 { Volume = 500:1500; } Times = 1:3; }
   IsWall = true;
+  SpatialFlags = MF_WALL;
 }
 
 monsterportal
