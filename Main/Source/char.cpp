@@ -1466,6 +1466,9 @@ truth character::TryMove(v2 MoveVector, truth Important, truth Run)
     {
       if(HasPetrussNut() && !HasGoldenEagleShirt())
       {
+        #ifndef NOSOUND
+        soundsystem::playMusic("Mortifier");
+        #endif
         game::PlayVictoryMusic();
         game::TextScreen(CONST_S("An undead and sinister voice greets you as you leave the city behind:\n\n"
                                  "\"MoRtAl! ThOu HaSt SlAuGhTeReD pEtRuS aNd PlEaSeD mE!\nfRoM tHiS dAy On, "
@@ -1727,6 +1730,9 @@ void character::Die(ccharacter* Killer, cfestring& Msg, ulong DeathFlags)
       Ghost->Enable();
       game::CreateBone();
     }
+    #ifndef NOSOUND
+    soundsystem::playMusic("death");
+    #endif
     game::TextScreen(CONST_S("Unfortunately you died."), ZERO_V2, WHITE, true, true, &game::ShowDeathSmiley);
     game::End(Msg);
   }
@@ -2419,7 +2425,13 @@ void character::GetPlayerCommand()
     for(c = 0; c < DIRECTION_COMMAND_KEYS; ++c)
       if(Key == game::GetMoveCommandKey(c))
       {
-        HasActed = TryMove(ApplyStateModification(game::GetMoveVector(c)), true, game::PlayerIsRunning());
+        int d = game::AdjustForFacing(c);
+        if(!ivanconfig::Mode3FPP()) game::SetFacing(d);
+        if(game::IsInWilderness() || !ivanconfig::Mode3FPP() || ((c!=0) && (c!=2)))
+         HasActed = TryMove(ApplyStateModification(game::GetMoveVector(d)), true, game::PlayerIsRunning());
+       else
+          game::SetFacing(d);
+
         ValidKeyPressed = true;
       }
 
@@ -4667,11 +4679,16 @@ void character::DrawPanel(truth AnimationDraw) const
   FONT->Printf(DOUBLE_BUFFER, v2(PanelPosX, PanelPosY++ * 10), WHITE, "Gold: %ld", GetMoney());
   ++PanelPosY;
 
+ festring Loc;
   if(game::IsInWilderness())
-    FONT->Printf(DOUBLE_BUFFER, v2(PanelPosX, PanelPosY++ * 10), WHITE, "Worldmap");
+    Loc = "Worldmap";
   else
-    FONT->Printf(DOUBLE_BUFFER, v2(PanelPosX, PanelPosY++ * 10), WHITE, "%s",
-                 game::GetCurrentDungeon()->GetShortLevelDescription(game::GetCurrentLevelIndex()).CapitalizeCopy().CStr());
+    Loc = game::GetCurrentDungeon()->GetShortLevelDescription(game::GetCurrentLevelIndex()).CapitalizeCopy();
+  #ifndef NOSOUND
+  soundsystem::playMusic(Loc);
+  #endif
+
+  FONT->Printf(DOUBLE_BUFFER, v2(PanelPosX, PanelPosY++ * 10), WHITE, "%s", Loc.CStr());
 
   ivantime Time;
   game::GetTime(Time);
@@ -5765,30 +5782,31 @@ void character::Draw(blitdata& BlitData) const
   BlitData.Src.Y = 16;
   cint SquareIndex = BlitData.CustomData & SQUARE_INDEX_MASK;
 
+  const bitmap *b = (bitmap*) igraph::GetSymbolGraphic();
   if(GetTeam() == PLAYER->GetTeam() && !IsPlayer()
      && SquareIndex == GetTameSymbolSquareIndex())
   {
     BlitData.Src.X = 32;
-    igraph::GetSymbolGraphic()->LuminanceMaskedBlit(BlitData);
+    igraph::Blit3(b, BlitData, MF_ML | MF_OBJECT);
   }
 
   if(IsFlying() && SquareIndex == GetFlySymbolSquareIndex())
   {
     BlitData.Src.X = 128;
-    igraph::GetSymbolGraphic()->LuminanceMaskedBlit(BlitData);
+    igraph::Blit3(b, BlitData, MF_ML | MF_OBJECT);
   }
 
   if(IsSwimming() && SquareIndex == GetSwimmingSymbolSquareIndex())
   {
     BlitData.Src.X = 240;
-    igraph::GetSymbolGraphic()->LuminanceMaskedBlit(BlitData);
+    igraph::Blit3(b, BlitData, MF_ML | MF_OBJECT);
   }
 
   if(GetAction() && GetAction()->IsUnconsciousness()
      && SquareIndex == GetUnconsciousSymbolSquareIndex())
   {
     BlitData.Src.X = 224;
-    igraph::GetSymbolGraphic()->LuminanceMaskedBlit(BlitData);
+    igraph::Blit3(b, BlitData, MF_ML | MF_OBJECT);
   }
 
   BlitData.Src.X = BlitData.Src.Y = 0;
@@ -7635,26 +7653,34 @@ void character::PrintEndGasImmunityMessage() const
   if(IsPlayer())
     ADD_MESSAGE("Yuck! The world smells bad again.");
 }
-
+ 
 void character::ShowAdventureInfo() const
 {
-  if(GetStack()->GetItems()
-     && game::TruthQuestion(CONST_S("Do you want to see your inventory? [y/n]"), REQUIRES_ANSWER))
-  {
-    GetStack()->DrawContents(this, CONST_S("Your inventory"), NO_SELECT);
+  while(1) {
+    int Answer = 
+      game::KeyQuestion(
+        CONST_S("Do you want to see your (i)nventory, (m)essage history, (k)ill list, or (n)othing?"),
+        'x', 8, 'i', 'I', 'm', 'M', 'k', 'K', 'N', 'n');
+ 
+    if(Answer == 'i' || Answer == 'I')
+    {
+      GetStack()->DrawContents(this, CONST_S("Your inventory"), NO_SELECT);
+ 
+      for(stackiterator i = GetStack()->GetBottom(); i.HasItem(); ++i)
+        i->DrawContents(this);
+ 
+      doforequipmentswithparam<ccharacter*>()(this, &item::DrawContents, this);
+    }
+ 
+    else if(Answer == 'm' || Answer == 'M')
+      msgsystem::DrawMessageHistory();
 
-    for(stackiterator i = GetStack()->GetBottom(); i.HasItem(); ++i)
-      i->DrawContents(this);
+    else if(Answer == 'k' || Answer == 'K')
+      game::DisplayMassacreLists();
 
-    doforequipmentswithparam<ccharacter*>()(this, &item::DrawContents, this);
+    else if(Answer != 'x')
+      return;
   }
-
-  if(game::TruthQuestion(CONST_S("Do you want to see your message history? [y/n]"), REQUIRES_ANSWER))
-    msgsystem::DrawMessageHistory();
-
-  if(!game::MassacreListsEmpty()
-     && game::TruthQuestion(CONST_S("Do you want to see your massacre history? [y/n]"), REQUIRES_ANSWER))
-    game::DisplayMassacreLists();
 }
 
 truth character::EditAllAttributes(int Amount)

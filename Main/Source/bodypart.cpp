@@ -2561,9 +2561,9 @@ void bodypart::Draw(blitdata& BlitData) const
   cbitmap* P = GraphicData.Picture[F];
 
   if(BlitData.CustomData & ALLOW_ALPHA)
-    P->AlphaPriorityBlit(BlitData);
+    igraph::Blit3(P, BlitData, MF_AP | MF_OBJECT);
   else
-    P->MaskedPriorityBlit(BlitData);
+    igraph::Blit3(P, BlitData, MF_MP | MF_OBJECT);
 
   if(Fluid && ShowFluids())
     DrawFluids(BlitData);
@@ -3017,8 +3017,8 @@ void bodypart::DrawEquipment(const graphicdata& GraphicData, blitdata& BlitData)
   if(EAF)
   {
     int F = !(BlitData.CustomData & ALLOW_ANIMATE) || EAF == 1 ? 0 : GET_TICK() & (EAF - 1);
-    GraphicData.Picture[F]->AlphaPriorityBlit(BlitData);
-  }
+    igraph::Blit3(GraphicData.Picture[F], BlitData, MF_AP | MF_OBJECT);
+  }                                                          
 }
 
 void playerkindhead::DrawArmor(blitdata& BlitData) const
@@ -3386,9 +3386,9 @@ void dogtorso::Draw(blitdata& BlitData) const
   cbitmap* P = GraphicData.Picture[Index];
 
   if(BlitData.CustomData & ALLOW_ALPHA)
-    P->AlphaPriorityBlit(BlitData);
+    igraph::Blit3(P, BlitData, MF_AP | MF_OBJECT);
   else
-    P->MaskedPriorityBlit(BlitData);
+    igraph::Blit3(P, BlitData, MF_MP | MF_OBJECT);
 }
 
 void corpse::SetLifeExpectancy(int Base, int RandPlus)

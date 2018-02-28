@@ -37,6 +37,7 @@ class material;
 class team;
 struct node;
 struct emitter;
+struct blitdata;
 template <class type> struct fearray;
 
 struct nodepointerstorer
@@ -193,6 +194,7 @@ class level : public area
   void Explosion(character*, cfestring&, v2, int, truth = true, truth = false);
   truth CollectCreatures(charactervector&, character*, truth);
   void ApplyLSquareScript(const squarescript*);
+  virtual void Draw3(int x, int y, truth esp, blitdata &BlitData) const;
   virtual void Draw(truth) const;
   v2 GetEntryPos(ccharacter*, int) const;
   void GenerateRectangularRoom(std::vector<v2>&, std::vector<v2>&, std::vector<v2>&, const roomscript*, room*, v2, v2);

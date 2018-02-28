@@ -218,10 +218,15 @@ void lsquare::DrawStaticContents(blitdata& BlitData) const
     if(StaticContentCache.Luminance != BlitData.Luminance)
       UpdateStaticContentCache(BlitData.Luminance);
 
-    StaticContentCache.Bitmap->FastBlit(BlitData.Bitmap, BlitData.Dest);
-    return;
+    if(!(BlitData.CustomData & DO_BLIT3)) {
+      StaticContentCache.Bitmap->FastBlit(BlitData.Bitmap, BlitData.Dest);
+      return;
+    }
   }
 
+  igraph::noCeiling = 
+    ((game::GetCurrentDungeonIndex() == NEW_ATTNAM) ||
+     (game::GetCurrentDungeonIndex() == ATTNAM)) && !IsInside();
   if(!OLTerrain || OLTerrain->ShowThingsUnder())
     GLTerrain->Draw(BlitData);
 

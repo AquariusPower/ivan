@@ -23,6 +23,7 @@ class rawbitmap;
 class outputfile;
 class inputfile;
 class festring;
+struct blitdata;
 
 /* memcmp doesn't like alignment of structure members */
 
@@ -143,6 +144,26 @@ class igraph
   static col16 CursorColor[CURSOR_TYPES];
   static bitmap* BackGround;
   static int CurrentColorType;
+
+public:
+  static int defx, defy;
+  static truth noCeiling;
+  static void fDrawRainPixel(v2 x, col16 c);  
+  static void Blit3(const bitmap *b, blitdata &B, int mode);
 };
+
+#define INMODE3 (BlitData.CustomData & DO_BLIT3)
+
+#define MF_FLAGS2 15
+
+#define MF_AP MF_A | MF_P
+#define MF_AL MF_A | MF_L
+#define MF_ML MF_M | MF_L
+#define MF_MP MF_M | MF_P
+
+#define MF_L 1
+#define MF_P 2
+#define MF_A 4
+#define MF_M 8
 
 #endif

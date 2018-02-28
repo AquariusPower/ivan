@@ -63,12 +63,15 @@ class soundsystem
 {
  public:
   static void playSound(festring Buffer);
+  static void playMusic(festring Music);
  
  private:
   static int SoundState;
   static void initSound();
+  static festring CurrentMusic;
   static std::vector<struct SoundFile> files;
   static std::vector<struct SoundInfo> patterns;
+  static void changeMusic();
   static int addFile(festring filename);
   static truth matches(festring Pattern, festring Buffer);
   static struct SoundFile *findMatchingSound(festring Buffer);

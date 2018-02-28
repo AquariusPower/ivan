@@ -20,6 +20,7 @@
 #include "femath.h"
 #include "festring.h"
 #include "ivandef.h"
+#include "iconf.h"
 
 #ifndef LIGHT_BORDER
 #define LIGHT_BORDER 80
@@ -259,6 +260,8 @@ class game
   static int GetScreenXSize() { return 42; }
   static int GetScreenYSize() { return 26; }
   static v2 CalculateScreenCoordinates(v2);
+  static int AdjustForFacing(int d);
+  static int UnadjustForFacing(int d);
   static void BusyAnimation();
   static void BusyAnimation(bitmap*, truth);
   static v2 PositionQuestion(cfestring&, v2, positionhandler = 0, positionkeyhandler = 0, truth = true);
@@ -338,6 +341,9 @@ class game
   static void DisplayMassacreLists();
   static void DisplayMassacreList(const massacremap&, cchar*, long);
   static truth MassacreListsEmpty();
+  static void SetFacing(int x) { Mode3Facing = x; }
+  static int GetFacing();
+  static const v2 GetFacingVector(int I) { return FacingVector[I]; }
   static void PlayVictoryMusic();
   static void PlayDefeatMusic();
 #ifdef WIZARD
@@ -510,6 +516,10 @@ class game
   static long PetMassacreAmount;
   static long MiscMassacreAmount;
   static truth WizardMode;
+
+  static int Mode3Facing;
+  static const v2 FacingVector[];
+
   static int SeeWholeMapCheatMode;
   static truth GoThroughWallsCheat;
   static int QuestMonstersFound;

@@ -324,6 +324,7 @@
 #define LEAD (SOLID_ID + 65)
 #define BLACK_GRANITE (SOLID_ID + 66)
 #define BLACK_LEATHER (SOLID_ID + 67)
+#define WEAK_GLASS (SOLID_ID + 68)
 #define BLACK_DIAMOND (SOLID_ID + 68)
 #define PSYPHER (SOLID_ID + 69)
 #define SUN_CRYSTAL (SOLID_ID + 70)
@@ -1066,6 +1067,18 @@
 #define NO_ARTICLE 4
 #define FORCE_THE 8
 #define SHOW_MATERIAL 16
+
+/* Spatial Flags */
+#define MF_OBJECT  256
+#define MF_FLOOR   512
+#define MF_CEIL    1024
+#define MF_WALL    2048
+#define MF_ONFLOOR 4096
+#define MF_LOWWALL 8192
+#define MF_TABLE   16384
+#define MF_WINDOW  128
+#define MF_LARGE   64
+#define MF_STAIR   32
 
 /***************************/
 /* Material DataBase flags */

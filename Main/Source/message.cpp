@@ -253,6 +253,7 @@ struct SoundInfo
 
 int soundsystem::SoundState = 0;
 
+festring soundsystem::CurrentMusic;
 std::vector<SoundFile> soundsystem::files;
 std::vector<SoundInfo> soundsystem::patterns;
 
@@ -373,6 +374,33 @@ void soundsystem::playSound(festring Buffer)
 			}
 		}
   }
+}
+
+void soundsystem::playMusic(festring Music)
+{
+  if(!ivanconfig::GetPlayMusic()) return;
+  initSound();
+  if(SoundState != 1) return;
+  if(Music != CurrentMusic)
+  {
+    CurrentMusic = Music;
+    changeMusic();
+  }
+}
+
+void soundsystem::changeMusic()
+{
+  if(!ivanconfig::GetPlayMusic()) return;
+  SoundFile *sf = findMatchingSound("music:" + CurrentMusic);
+  if(!sf) return;
+  if(!sf->music)
+  {
+    festring sndfile = game::GetDataDir() + "Sound/" + sf->filename;
+      
+    sf->music = Mix_LoadMUS(sndfile.CStr());
+  }
+  if(sf->music)
+    Mix_PlayMusic(sf->music, 0);
 }
 
 #endif

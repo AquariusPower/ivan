@@ -32,6 +32,16 @@ class ivanconfig
   static truth GetPlaySounds() { return PlaySounds.Value; }
   static long GetVolume() { return Volume.Value; }
   static long GetMIDIOutputDevice() { return MIDIOutputDevice.Value; }
+  static truth GetPlayMusic() { return PlayMusic.Value; }
+  static truth GetMode3() { return Mode3.Value; }
+  static void SwitchMode3() { Mode3.Value = !Mode3.Value; }
+  static truth GetIsoMode() { return IsoMode.Value; }
+  static truth GetShowAllInIso() { return ShowAllInIso.Value; }
+  static truth GetAnaglyph() { return Anaglyph.Value; }
+  static truth GetShowMiniMap() { return ShowMiniMap.Value; }
+
+  static truth Mode3Iso() { return Mode3.Value && IsoMode.Value; }
+  static truth Mode3FPP() { return Mode3.Value && !IsoMode.Value; }
 #ifndef __DJGPP__
   static int GetGraphicsScale() { return GraphicsScale.Value; }
   static truth GetFullScreenMode() { return FullScreenMode.Value; }
@@ -88,6 +98,12 @@ class ivanconfig
 #endif
   static col24 ContrastLuminance;
   static truthoption PlaySounds;
+  static truthoption PlayMusic;
+  static truthoption Mode3;
+  static truthoption IsoMode;
+  static truthoption ShowAllInIso;
+  static numberoption Anaglyph;
+  static truthoption ShowMiniMap;
 };
 
 inline long ivanconfig::ApplyContrastTo(long L)

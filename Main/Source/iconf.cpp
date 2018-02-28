@@ -88,6 +88,12 @@ truthoption ivanconfig::FullScreenMode(   "FullScreenMode",
 #endif
 col24 ivanconfig::ContrastLuminance = NORMAL_LUMINANCE;
 truthoption ivanconfig::PlaySounds("PlaySounds", "use sounds", true);
+truthoption ivanconfig::PlayMusic("PlayMusic", "use music", true);
+truthoption ivanconfig::Mode3("Mode3", "play in 3D", false);
+truthoption ivanconfig::IsoMode("IsoMode", "Use isometric mode in 3D", false);
+truthoption ivanconfig::ShowAllInIso("ShowAllInIso", "Show hidden things in ISO mode", false);
+truthoption ivanconfig::ShowMiniMap("ShowMiniMap", "Show mini-map in FPP mode", false);
+numberoption ivanconfig::Anaglyph("Anaglyph", "Anaglyph depth of FPP mode", 0);
 
 v2 ivanconfig::GetQuestionPos() { return game::IsRunning() ? v2(16, 6) : v2(30, 30); }
 void ivanconfig::BackGroundDrawer() { game::DrawEverythingNoBlit(); }
@@ -323,7 +329,13 @@ void ivanconfig::Initialize()
   configsystem::AddOption(&SmartOpenCloseApply);
   configsystem::AddOption(&BeNice);
   configsystem::AddOption(&PlaySounds);
+  configsystem::AddOption(&PlayMusic);
   configsystem::AddOption(&Volume);
+  configsystem::AddOption(&Mode3);
+  configsystem::AddOption(&IsoMode);
+  configsystem::AddOption(&ShowAllInIso);
+  configsystem::AddOption(&ShowMiniMap);
+  configsystem::AddOption(&Anaglyph);
 
   std::vector<std::string> DeviceNames;
   int NumDevices = audio::GetMIDIOutputDevices(DeviceNames);

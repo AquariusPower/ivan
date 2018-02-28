@@ -56,6 +56,22 @@ char command::GetKey() const
   }
 }
 
+void commandsystem::ConfigureKeys() {
+  FILE *f = fopen("keys.cfg", "rt");
+
+  if(!f) return;
+  char buf[100];
+  while(fgets(buf, 100, f) > 0) {
+    for(int i=0; i<100; i++) if(buf[i] == 10 || buf[i] == 13) buf[i] = 0;
+    if(buf[2] != '=') continue;
+    command *cmd;
+    for(int c = 1; cmd = commandsystem::GetCommand(c); ++c)
+      if(strcmp(buf+3, cmd->GetDescription()) == 0)
+        cmd->SetKeys(buf[0], buf[1]);
+    }
+  fclose(f);
+  }
+
 command* commandsystem::Command[] =
 {
   0,
@@ -105,6 +121,7 @@ command* commandsystem::Command[] =
   new command(&WizardMode, "wizard mode activation", 'X', 'X', 'X', true),
 #endif
   new command(&Zap, "zap", 'z', 'z', 'z', false),
+  new command(&Mode3, "switch 3D mode", 'x', 'x', 'x', true),
 
 #ifdef WIZARD
 
@@ -1332,6 +1349,17 @@ truth commandsystem::Search(character* Char)
 {
   Char->Search(Char->GetAttribute(PERCEPTION) << 2);
   return true;
+}
+
+truth commandsystem::Mode3(character*)
+{
+  ivanconfig::SwitchMode3();
+  if(ivanconfig::GetMode3())
+    ADD_MESSAGE("3D mode activated.");
+  else
+    ADD_MESSAGE("Map mode activated.");
+  game::GetCurrentArea()->SendNewDrawRequest();
+  return false;
 }
 
 #ifdef WIZARD

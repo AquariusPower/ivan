@@ -649,6 +649,9 @@ void petrus::BeTalkedTo()
 
     if(game::TruthQuestion(CONST_S("Will you give the Shirt of the Golden Eagle to Petrus? [y/n]"), REQUIRES_ANSWER))
     {
+      #ifndef NOSOUND
+      soundsystem::playMusic("Shirt");
+      #endif
       game::PlayVictoryMusic();
       game::TextScreen(CONST_S("The Holy Shirt is returned to its old owner and you kneel down to receive your reward.\n"
                                "Petrus taps your shoulder with the Justifier and raises you to nobility. Later you\n"
@@ -682,6 +685,9 @@ void petrus::BeTalkedTo()
 
   if(PLAYER->HasHeadOfElpuri())
   {
+    #ifndef NOSOUND
+    soundsystem::playMusic("Elpuri");
+    #endif
     game::PlayVictoryMusic();
     game::TextScreen(CONST_S("You have slain Elpuri, and Petrus grants you the freedom you desire.\n"
                              "You spend the next months in Attnam as an honored hero and when the\n"
@@ -701,6 +707,9 @@ void petrus::BeTalkedTo()
     {
       if(PLAYER->RemoveEncryptedScroll())
       {
+        #ifndef NOSOUND
+        soundsystem::playMusic("Petrus");
+        #endif
         game::TextScreen(CONST_S("You kneel down and bow before the high priest and hand him the encrypted scroll.\n"
                                  "Petrus raises his arm, the scroll glows yellow, and lo! The letters are clear and\n"
                                  "readable. Petrus asks you to voice them aloud. The first two thousand words praise\n"

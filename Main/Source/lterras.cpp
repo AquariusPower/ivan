@@ -116,7 +116,8 @@ void altar::Draw(blitdata& BlitData) const
 {
   olterrain::Draw(BlitData);
   BlitData.Src.X = GetConfig() << 4;
-  igraph::GetSymbolGraphic()->LuminanceMaskedBlit(BlitData);
+  bitmap *b = (bitmap*) igraph::GetSymbolGraphic();
+  igraph::Blit3(b, BlitData, MF_ML | MF_TABLE);
   BlitData.Src.X = BlitData.Src.Y = 0;
 }
 
@@ -266,6 +267,9 @@ truth throne::SitOn(character* Sitter)
 
   if(Sitter->HasPetrussNut() && Sitter->HasGoldenEagleShirt() && game::GetGod(VALPURUS)->GetRelation() == 1000)
   {
+    #ifndef NOSOUND
+    soundsystem::playMusic("High Priest");
+    #endif
     game::PlayVictoryMusic();
     game::TextScreen(CONST_S("A heavenly choir starts to sing Grandis Rana and a booming voice fills the air:\n\n"
                              "\"Mortal! Thou hast surpassed Petrus, and pleased Us greatly during thy adventures!\n"

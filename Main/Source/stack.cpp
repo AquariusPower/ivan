@@ -55,13 +55,14 @@ void stack::Draw(ccharacter* Viewer, blitdata& BlitData,
       BlitData.Luminance = ivanconfig::GetContrastLuminance();
       BlitData.Src.Y = 16;
 
+      const bitmap *b = (bitmap*) igraph::GetSymbolGraphic();
       if(PlusSymbol)
-        igraph::GetSymbolGraphic()->LuminanceMaskedBlit(BlitData);
+        igraph::Blit3(b, BlitData, MF_ML | MF_OBJECT);
 
       if(Dangerous)
       {
         BlitData.Src.X = 160;
-        igraph::GetSymbolGraphic()->LuminanceMaskedBlit(BlitData);
+        igraph::Blit3(b, BlitData, MF_ML | MF_OBJECT);
       }
 
       BlitData.Src.X = BlitData.Src.Y = 0; /// check

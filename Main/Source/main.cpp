@@ -37,6 +37,7 @@
 #include "message.h"
 #include "proto.h"
 #include "audio.h"
+#include "command.h"
 
 #ifndef WIN32
 
@@ -90,6 +91,7 @@ int main(int argc, char** argv)
   databasesystem::Initialize();
   game::InitLuxTable();
   ivanconfig::Initialize();
+  commandsystem::ConfigureKeys();
   igraph::Init();
   game::CreateBusyAnimationCache();
   globalwindowhandler::SetQuitMessageHandler(game::HandleQuitMessage);
@@ -106,6 +108,7 @@ int main(int argc, char** argv)
 
   for(;;)
   {
+    soundsystem::playMusic("menu");
     int Select = iosystem::Menu(igraph::GetMenuGraphic(),
                                 v2(RES.X / 2, RES.Y / 2 - 20),
                                 CONST_S("\r"),

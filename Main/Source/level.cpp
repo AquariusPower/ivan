@@ -1214,6 +1214,68 @@ truth level::CollectCreatures(charactervector& CharacterArray, character* Leader
   return true;
 }
 
+void level::Draw3(int x, int y, truth esp, blitdata& BlitData) const {
+
+  if(!(x >= 0 && y >= 0 && x < XSize && y < YSize)) return;
+
+  const ulong LOSTick = game::GetLOSTick();
+                        
+  igraph::defx = x;
+  igraph::defy = y;
+
+  if(ivanconfig::Mode3Iso())
+  {
+    int px = PLAYER->GetPos().X;
+    int py = PLAYER->GetPos().Y;
+    if(x+y > px+py+16) return;
+    if(x+y < px+py-16) return;
+    if(x-y > px-py+14) return;
+    if(x-y < px-py-14) return;
+  }
+
+  const lsquare* Square = Map[x][y];
+  const ulong LastSeen = Square->LastSeen;
+  Square->Flags |= STRONG_NEW_DRAW_REQUEST;
+  if(LastSeen == LOSTick) {
+    if(!esp) Square->Draw(BlitData);
+  }
+  else
+  {
+    if(ivanconfig::Mode3Iso() && ivanconfig::GetShowAllInIso())
+    {
+      Square->Flags |= STRONG_NEW_DRAW_REQUEST;
+      
+      BlitData.Dest.X = RES.X - 64;
+      BlitData.Dest.Y = RES.Y - 64;
+
+      if(LastSeen == LOSTick)
+        Square->Draw(BlitData);
+      else if(Square->Flags & STRONG_BIT || LastSeen == LOSTick - 2)
+        Square->DrawMemorized(BlitData);
+      BlitData.Src.X = RES.X - 64;
+      BlitData.Src.Y = RES.Y - 64;
+
+      festring s = Square->GetMemorizedDescription();
+      truth b = s.Find("wall") != festring::NPos;
+      if(b) b = ! (s.Find("on the wall") != festring::NPos);
+      if(!b) b = s.Find("earth") != festring::NPos;
+      if(!b) b = s.Find("door") != festring::NPos;
+      if(b)
+        igraph::Blit3(DOUBLE_BUFFER, BlitData, MF_WALL);
+      else
+        igraph::Blit3(DOUBLE_BUFFER, BlitData, MF_FLOOR);
+      BlitData.Src.X = 0;
+      BlitData.Src.Y = 0;
+    }
+    if(esp)
+    {
+      const character* C = Square->Character;
+      if(C && C->CanBeSeenByPlayer())
+        Square->DrawMemorizedCharacter(BlitData);
+    }
+  }
+}
+
 void level::Draw(truth AnimationDraw) const
 {
   cint XMin = Max(game::GetCamera().X, 0);
@@ -1229,6 +1291,62 @@ void level::Draw(truth AnimationDraw) const
                         TRANSPARENT_COLOR,
                         ALLOW_ANIMATE|ALLOW_ALPHA };
 
+  if(ivanconfig::Mode3FPP()) {
+    int sx = game::GetScreenXSize();
+    int sy = game::GetScreenYSize();
+    BlitData.CustomData |= DO_BLIT3;
+    
+    col16 c = BLACK;
+    if(game::GetCurrentDungeonIndex() == NEW_ATTNAM) c = BLUE;
+    if(game::GetCurrentDungeonIndex() == ATTNAM) c = LIGHT_GRAY;
+    if((game::GetCurrentDungeonIndex() == ELPURI_CAVE) &&
+       (game::GetCurrentLevelIndex() == OREE_LAIR)) c = 0x3800;
+
+    DOUBLE_BUFFER->Fill(16,32,sx*16, sy*16, c);
+
+    int px = PLAYER->GetPos().X;
+    int py = PLAYER->GetPos().Y;
+    for(int t=0; t<2; t++)
+    {
+      for(int d=20; d>=1; d--) {
+        Draw3(px+d,py+d, t==1, BlitData);
+        Draw3(px-d,py+d, t==1, BlitData);
+        Draw3(px+d,py-d, t==1, BlitData);
+        Draw3(px-d,py-d, t==1, BlitData);
+        for(int e=d-1; e>0; e--) {
+          Draw3(px+d, py+e, t==1, BlitData);
+          Draw3(px+d, py-e, t==1, BlitData);
+          Draw3(px-d, py+e, t==1, BlitData);
+          Draw3(px-d, py-e, t==1, BlitData);
+          Draw3(px+e, py+d, t==1, BlitData);
+          Draw3(px+e, py-d, t==1, BlitData);
+          Draw3(px-e, py+d, t==1, BlitData);
+          Draw3(px-e, py-d, t==1, BlitData);
+          }
+        Draw3(px+d,py, t==1, BlitData);
+        Draw3(px-d,py, t==1, BlitData);
+        Draw3(px,py+d, t==1, BlitData);
+        Draw3(px,py-d, t==1, BlitData);
+      }
+      Draw3(px,py, t==1, BlitData);
+    }
+  }
+  else
+  if(ivanconfig::Mode3Iso()) {
+    int sx = game::GetScreenXSize();
+    int sy = game::GetScreenYSize();
+    
+    DOUBLE_BUFFER->Fill(16,32,sx*16, sy*16, BLACK);
+    BlitData.CustomData |= DO_BLIT3;
+ 
+    for(int x=0; x<XSize; x++)
+    for(int y=0; y<YSize; y++)
+    {
+      Draw3(x, y, false, BlitData);
+      Draw3(x, y, true,  BlitData);
+    }
+  }
+  else
   if(!game::GetSeeWholeMapCheatMode())
   {
     if(!AnimationDraw)
@@ -1292,6 +1410,66 @@ void level::Draw(truth AnimationDraw) const
         (*SquarePtr)->Draw(BlitData);
     }
   }
+  
+  if(ivanconfig::Mode3FPP() && ivanconfig::GetShowMiniMap()) {
+    BlitData.CustomData &= ~DO_BLIT3;
+    for(int rx = -2; rx <= 2; ++rx)
+    {
+      for(int ry = -2; ry <= 2; ++ry)
+        {
+        int x = rx + PLAYER->GetPos().X;
+        int y = ry + PLAYER->GetPos().Y;
+        if(x < 0 || y < 0 || x >= XSize || y >= YSize) continue;
+        const lsquare* Square = Map[x][y];
+        const ulong LastSeen = Square->LastSeen;
+
+        Square->Flags |= STRONG_NEW_DRAW_REQUEST;
+        
+        BlitData.Dest.X = RES.X - 64 + 16 * rx;
+        BlitData.Dest.Y = RES.Y - 64 + 16 * ry;
+
+        if(LastSeen == LOSTick)
+          Square->Draw(BlitData);
+        else if(Square->Flags & STRONG_BIT || LastSeen == LOSTick - 2)
+          Square->DrawMemorized(BlitData);
+      }
+    }
+  }
+/*if(game::MiniMapOn()) {
+    // minimap
+    bitmap mini(v2(16, 16));
+    blitdata B = { DOUBLE_BUFFER,
+      { 0, 0 },
+      { 0, 0 },
+      { TILE_SIZE, TILE_SIZE },
+      { 0 },
+      TRANSPARENT_COLOR,
+      ALLOW_ANIMATE|ALLOW_ALPHA };
+    for(int x = 0; x < XSize; ++x)
+    {
+      lsquare** SquarePtr = &Map[x][0];
+
+      for(int y = 0; y < YSize; ++y, ++SquarePtr, BlitData.Dest.Y += TILE_SIZE)
+        {
+        const lsquare* Square = *SquarePtr;
+        const ulong LastSeen = Square->LastSeen;
+
+        Square->Flags |= STRONG_NEW_DRAW_REQUEST;
+
+        DOUBLE_BUFFER->PutPixel(8,8, BLACK);
+
+        if(LastSeen == LOSTick)
+          Square->Draw(B);
+        else if(Square->Flags & STRONG_BIT || LastSeen == LOSTick - 2)
+          Square->DrawMemorized(B);
+
+        col16 c = BLACK;
+//      if(Square->Memorized)
+//        c = Square->Memorized->GetPixel(8,8);
+        DOUBLE_BUFFER->PutPixel(RES.X - 100 + x, RES.Y - 100 + y, DOUBLE_BUFFER->GetPixel(8,8));
+      }
+    }
+    } */
 }
 
 v2 level::GetEntryPos(ccharacter* Char, int I) const
