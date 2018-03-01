@@ -102,12 +102,18 @@ horn.wav
 dooropen.wav
 .*opens the door.*
 dooropen.wav
+.*door opens.*
+dooropen.wav
 .*close the door.*
 doorclose.wav
 .*closes the door.*
 doorclose.wav
 .*door resists.*
-doorResists.wav
+doorResists1.wav doorResists2.wav doorResists3.wav doorResists4.wav
+.*door is locked.*
+doorResists1.wav doorResists2.wav doorResists3.wav doorResists4.wav
+.*lock breaks.*
+lockbreaks.wav
 .*tortured hyena.*
 hyena.wav
 .*slain.*again.*
