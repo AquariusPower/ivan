@@ -1869,7 +1869,7 @@ void humanoid::DrawSilhouette(truth AnimationDraw) const
                   TRANSPARENT_COLOR,
                   ALLOW_ANIMATE };
 
-  v2 Where(RES.X - SILHOUETTE_SIZE.X - 39, 53);
+  v2 Where(RES.X - SILHOUETTE_SIZE.X - 39 + (game::IsWideLayout() ? -130 : 0), 53); // -130 to fit in zoomed 16:9 monitor
   cint Equipments = GetEquipments();
 
   if(CanUseEquipment())
@@ -2355,7 +2355,7 @@ int humanoid::DrawStats(truth AnimationDraw) const
   if(AnimationDraw)
     return 15;
 
-  int PanelPosX = RES.X - 96, PanelPosY = 15;
+  int PanelPosX = RES.X - 96 + (game::IsWideLayout() ? -130 : 0), PanelPosY = 15; // -130 to fit in zoomed 16:9 monitor  
   PrintAttribute("AStr", ARM_STRENGTH, PanelPosX, PanelPosY++);
   PrintAttribute("LStr", LEG_STRENGTH, PanelPosX, PanelPosY++);
   PrintAttribute("Dex", DEXTERITY, PanelPosX, PanelPosY++);

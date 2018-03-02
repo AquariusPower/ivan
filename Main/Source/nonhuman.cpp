@@ -491,7 +491,7 @@ int nonhumanoid::DrawStats(truth AnimationDraw) const
   if(AnimationDraw)
     return 3;
 
-  int PanelPosX = RES.X - 96, PanelPosY = 3;
+  int PanelPosX = RES.X - 96 + (game::IsWideLayout() ? -130 : 0), PanelPosY = 3; // -130 to fit in zoomed 16:9 monitor  
   PrintAttribute("Str", ARM_STRENGTH, PanelPosX, PanelPosY++);
   PrintAttribute("Agi", AGILITY, PanelPosX, PanelPosY++);
   return PanelPosY;
