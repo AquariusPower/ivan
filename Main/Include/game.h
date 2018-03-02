@@ -256,6 +256,8 @@ class game
   static int GetDirectionForVector(v2);
   static cchar* GetVerbalPlayerAlignment();
   static void CreateGods();
+  static void SetOutlinedGfx(truth b) { bOutlinedGfx = b; }
+  static truth IsOutlinedGfx() { return bOutlinedGfx; }
   static void SetWideLayout(truth b) { bWideLayout = b; }
   static truth IsWideLayout() { return bWideLayout; }
   static int GetScreenXSize() { return IsWideLayout() ? 28 : 42; } // -14 from max to fit text there
@@ -551,6 +553,7 @@ class game
   static truth PlayerHasReceivedAllGodsKnownBonus;
   static cbitmap* EnterImage;
   static v2 EnterTextDisplacement;
+  static truth bOutlinedGfx;
   static truth bWideLayout;
 };
 

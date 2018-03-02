@@ -71,6 +71,7 @@ int main(int argc, char** argv)
   {
     std::cout << "--help        Show this help." << std::endl;
     std::cout << "--version     Show version." << std::endl;
+    std::cout << "--outlinedgfx Some graphics will use their outlined option." << std::endl;
     std::cout << "--widelayout  Wide monitor 16:9 layout so you can zoom to it if your window manager allows it." << std::endl;
     return 0;
   }
@@ -86,6 +87,11 @@ int main(int argc, char** argv)
     if(festring(argv[i]) == "--widelayout")
     {
       game::SetWideLayout(true);
+    }
+
+    if(festring(argv[i]) == "--outlinedgfx")
+    {
+      game::SetOutlinedGfx(true);
     }
   }
 
