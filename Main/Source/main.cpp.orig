@@ -71,9 +71,11 @@ int main(int argc, char** argv)
   {
     std::cout << "--help        Show this help." << std::endl;
     std::cout << "--version     Show version." << std::endl;
-    std::cout << "--outlinedgfx Some graphics will use their outlined option." << std::endl;
+<<<<<<< HEAD
     std::cout << "--widelayout  Wide monitor 16:9 layout so you can zoom to it if your window manager allows it." << std::endl;
-    std::cout << "--bonesarefun Cheater! Will generate bones file as often as possible on player's death." << std::endl;
+=======
+    std::cout << "--outlinedgfx Some graphics will use their outlined option." << std::endl;
+>>>>>>> OnlyMediaAndCfgs
     return 0;
   }
   
@@ -85,21 +87,16 @@ int main(int argc, char** argv)
 
   for(int i=1;i<argc;i++)
   {
+<<<<<<< HEAD
     if(festring(argv[i]) == "--widelayout")
     {
       game::SetWideLayout(true);
-    }
-
+=======
     if(festring(argv[i]) == "--outlinedgfx")
     {
       game::SetOutlinedGfx(true);
+>>>>>>> OnlyMediaAndCfgs
     }
-    
-    if(festring(argv[i]) == "--bonesarefun")
-    {
-      game::SetBonesAreFun(true);
-    }
-    
   }
 
 #ifdef __DJGPP__

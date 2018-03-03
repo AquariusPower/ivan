@@ -112,6 +112,8 @@ int game::NecroCounter;
 int game::CursorData;
 truth game::CausePanicFlag;
 truth game::bBonesAreFun;
+truth game::bOutlinedGfx;
+truth game::bWideLayout;
 
 truth game::Loading = false;
 truth game::JumpToPlayerBe = false;

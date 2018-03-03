@@ -256,8 +256,12 @@ class game
   static int GetDirectionForVector(v2);
   static cchar* GetVerbalPlayerAlignment();
   static void CreateGods();
-  static int GetScreenXSize() { return 42; }
-  static int GetScreenYSize() { return 26; }
+  static void SetOutlinedGfx(truth b) { bOutlinedGfx = b; }
+  static truth IsOutlinedGfx() { return bOutlinedGfx; }
+  static void SetWideLayout(truth b) { bWideLayout = b; }
+  static truth IsWideLayout() { return bWideLayout; }
+  static int GetScreenXSize() { return IsWideLayout() ? 28 : 42; } // -14 from max to fit text there
+  static int GetScreenYSize() { return IsWideLayout() ? 13 : 26; } // half of visible dungeon area in Y
   static v2 CalculateScreenCoordinates(v2);
   static void BusyAnimation();
   static void BusyAnimation(bitmap*, truth);
@@ -552,6 +556,8 @@ class game
   static cbitmap* EnterImage;
   static v2 EnterTextDisplacement;
   static truth bBonesAreFun;
+  static truth bOutlinedGfx;
+  static truth bWideLayout;
 };
 
 inline void game::CombineLights(col24& L1, col24 L2)
