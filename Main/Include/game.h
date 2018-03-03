@@ -439,6 +439,8 @@ class game
   {
     EnterTextDisplacement = What;
   }
+  static truth IsBonesAreFun(){ return bBonesAreFun; }
+  static void SetBonesAreFun(truth b){ bBonesAreFun=b; }
  private:
   static void UpdateCameraCoordinate(int&, int, int, int);
   static cchar* const Alignment[];
@@ -549,6 +551,7 @@ class game
   static truth PlayerHasReceivedAllGodsKnownBonus;
   static cbitmap* EnterImage;
   static v2 EnterTextDisplacement;
+  static truth bBonesAreFun;
 };
 
 inline void game::CombineLights(col24& L1, col24 L2)
