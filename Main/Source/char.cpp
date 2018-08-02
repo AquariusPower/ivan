@@ -24,6 +24,7 @@
  * & duration flags at once. */
 
 #include "hiteffect.h" //TODO move to charsset.cpp?
+#include "lterras.h"
 
 //#define DBGMSG_V2
 #include "dbgmsgproj.h"
@@ -3855,8 +3856,30 @@ truth character::CheckForDoors()
   for(int d = 0; d < GetNeighbourSquares(); ++d)
   {
     lsquare* Square = GetNeighbourLSquare(d);
+    if(Square==NULL)continue;
 
-    if(Square && Square->GetOLTerrain() && Square->GetOLTerrain()->Open(this))
+    olterrain* olt = Square->GetOLTerrain();
+    if(olt==NULL)continue;
+
+    if(olt->IsOpen())continue;
+
+    if(dynamic_cast<brokendoor*>(olt)!=NULL){
+      // ok try to open it
+    }else
+    if(dynamic_cast<door*>(olt)!=NULL){ //only non broken will remain secret
+      door* Door = (door*)olt;
+      if(Door->GetAdjective() == "very secret"){ //TODO this functionality will break if that adjective changes... create a new database member IsSecret, use as reference IsAlwaysTransparent codification
+        if(olt->IsLocked()) //TODO high perception/intelligence could allow a chance to try to open it using a key if they have it (and should close and lock just after going thru)
+          continue;
+        else{
+          if(clock()%10!=0) // 10% chance to touch and may open the unlocked secret door
+            continue;
+        }
+      }
+    }
+    //else continue; TODO vanilla just tried to open anything there, so is there something else than a door that could be opened?
+
+    if(olt->Open(this))
       return true;
   }
 
